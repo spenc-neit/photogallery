@@ -1,114 +1,52 @@
-import { StatusBar } from "expo-status-bar";
-import { useState } from "react";
-import {
-	StyleSheet,
-	View,
-	FlatList,
-	Image,
-	TouchableOpacity,
-	TextInput,
-} from "react-native";
-import { ImageData } from "./ImageData";
+import { NavigationContainer } from "@react-navigation/native";
+import { createStackNavigator } from "@react-navigation/stack";
+import { StackParamList } from "./StackParamList";
 
+const Stack = createStackNavigator<StackParamList>();
+
+import { ImageData } from "./ImageData";
+import { Home } from "./Home";
+import { PhotoDetail } from "./PhotoDetail";
+import { FeaturedPhotoModal } from "./FeaturedPhotoModal";
 const imageData: ImageData[] = [];
 for (let i = 1; i < 70; i++) {
 	imageData.push({ id: i, url: `https://picsum.photos/id/${i}/200` });
 }
 
 export default function App() {
-	const [displayLgImg, setDisplayLgImg] = useState(false);
-	const [featuredImgUrl, setFeaturedImgUrl] = useState("");
-	const [searchQuery, setSearchQuery] = useState("");
-	const [activeImages, setActiveImages] = useState(imageData);
-
-	const search = (query: string) => {
-		const filteredContacts = imageData.filter((image) =>
-			image.id.toString().toLowerCase().includes(query.toLowerCase())
-		);
-		setActiveImages(filteredContacts);
-		setSearchQuery(query);
-	};
-
-	const showLgImg = (source: string) => {
-		setFeaturedImgUrl(source);
-		setDisplayLgImg(true);
-	};
-
-	const hideLgImg = () => {
-		setDisplayLgImg(false);
-	};
-
-	if (displayLgImg) {
-		return (
-			<View style={styles.featuredImageView}>
-				<TouchableOpacity onPress={hideLgImg}>
-					<Image
-						source={{ uri: featuredImgUrl }}
-						style={styles.featuredImage}
-					/>
-				</TouchableOpacity>
-			</View>
-		);
-	}
 	return (
-		<View style={styles.container}>
-			<TextInput
-				value={searchQuery}
-				placeholder="search"
-				style={styles.textinput}
-				onChangeText={search}
-			/>
-			<FlatList
-				data={activeImages}
-				numColumns={3}
-				renderItem={({ item }) => {
-					return (
-						<TouchableOpacity
-							onPress={() => {
-								showLgImg(item.url);
-							}}
-						>
-							<Image
-								source={{ uri: item.url }}
-								alt={item.id.toString()}
-								style={styles.image}
-							/>
-						</TouchableOpacity>
-					);
-				}}
-			/>
-			<StatusBar style="auto" />
-		</View>
+		<NavigationContainer>
+			<Stack.Navigator>
+				<Stack.Screen
+					name="Home"
+					component={Home}
+					options={{
+						headerTitle: "Photo Gallery",
+						headerStyle: { backgroundColor: "#69F" },
+					}}
+				/>
+				<Stack.Screen
+					name="PhotoDetail"
+					options={{
+						headerTitle: "This should not be seen",
+						headerStyle: { backgroundColor: "#69F" },
+					}}
+					component={PhotoDetail}
+				/>
+				<Stack.Screen
+					name="FeaturedPhotoModal"
+					component={FeaturedPhotoModal}
+					options={{
+						presentation: "modal",
+						headerTintColor: "white",
+						headerTitle: "",
+						headerStyle: { backgroundColor: "black" },
+						cardStyle: { backgroundColor: "black" },
+						headerShown:false,
+						headerShadowVisible:false
+					}}
+				/>
+			</Stack.Navigator>
+		</NavigationContainer>
 	);
 }
-
-const styles = StyleSheet.create({
-	container: {
-		flex: 1,
-		backgroundColor: "#fff",
-		alignItems: "center",
-		justifyContent: "center",
-	},
-	image: {
-		width: 100,
-		height: 100,
-		margin: 5,
-	},
-	featuredImage: {
-		width: 200,
-		height: 200,
-	},
-	featuredImageView: {
-		height: "100%",
-		justifyContent: "center",
-		alignItems: "center",
-		backgroundColor: "black",
-	},
-	textinput: {
-		borderColor: "black",
-		borderWidth: 1,
-		width: "50%",
-		height: 35,
-		marginVertical: 40,
-	},
-});
