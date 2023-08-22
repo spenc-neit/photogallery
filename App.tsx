@@ -1,52 +1,61 @@
 import { NavigationContainer } from "@react-navigation/native";
 import { createStackNavigator } from "@react-navigation/stack";
-import { StackParamList } from "./StackParamList";
+import { StackParamList } from "./gallery/GalleryStackParamList";
+import { createDrawerNavigator } from "@react-navigation/drawer";
+import { Home } from "./gallery/Home";
+import { PhotoDetail } from "./gallery/PhotoDetail";
+import { FeaturedPhotoModal } from "./gallery/FeaturedPhotoModal";
+import { MidtermTabNavigator } from "./midterm/MidtermTabNavigator";
+import { WeatherDrawerNavigator } from "./weather/WeatherDrawerNavigator";
 
-const Stack = createStackNavigator<StackParamList>();
 
-import { ImageData } from "./ImageData";
-import { Home } from "./Home";
-import { PhotoDetail } from "./PhotoDetail";
-import { FeaturedPhotoModal } from "./FeaturedPhotoModal";
-const imageData: ImageData[] = [];
-for (let i = 1; i < 70; i++) {
-	imageData.push({ id: i, url: `https://picsum.photos/id/${i}/200` });
+const MainDrawer = createDrawerNavigator();
+
+const GalleryStack = createStackNavigator<StackParamList>();
+const GalleryStackNavigator = () => {
+	return (
+		<GalleryStack.Navigator>
+			<GalleryStack.Screen
+				name="Home"
+				component={Home}
+				options={{
+					headerTitle: "Photo Gallery",
+					headerStyle: { backgroundColor: "#69F" },
+				}}
+			/>
+			<GalleryStack.Screen
+				name="PhotoDetail"
+				options={{
+					headerTitle: "This should not be seen",
+					headerStyle: { backgroundColor: "#69F" },
+				}}
+				component={PhotoDetail}
+			/>
+			<GalleryStack.Screen
+				name="FeaturedPhotoModal"
+				component={FeaturedPhotoModal}
+				options={{
+					presentation: "modal",
+					headerTintColor: "white",
+					headerTitle: "",
+					headerStyle: { backgroundColor: "black" },
+					cardStyle: { backgroundColor: "black" },
+					headerShown:false,
+					headerShadowVisible:false
+				}}
+			/>
+		</GalleryStack.Navigator>
+	)
 }
 
 export default function App() {
 	return (
 		<NavigationContainer>
-			<Stack.Navigator>
-				<Stack.Screen
-					name="Home"
-					component={Home}
-					options={{
-						headerTitle: "Photo Gallery",
-						headerStyle: { backgroundColor: "#69F" },
-					}}
-				/>
-				<Stack.Screen
-					name="PhotoDetail"
-					options={{
-						headerTitle: "This should not be seen",
-						headerStyle: { backgroundColor: "#69F" },
-					}}
-					component={PhotoDetail}
-				/>
-				<Stack.Screen
-					name="FeaturedPhotoModal"
-					component={FeaturedPhotoModal}
-					options={{
-						presentation: "modal",
-						headerTintColor: "white",
-						headerTitle: "",
-						headerStyle: { backgroundColor: "black" },
-						cardStyle: { backgroundColor: "black" },
-						headerShown:false,
-						headerShadowVisible:false
-					}}
-				/>
-			</Stack.Navigator>
+			<MainDrawer.Navigator screenOptions={{drawerPosition:"right", headerShown:false}}>
+				<MainDrawer.Screen name="PhotoGallery" component={GalleryStackNavigator} />
+				<MainDrawer.Screen name="Weather" component={WeatherDrawerNavigator} />
+				<MainDrawer.Screen name="Midterm" component={MidtermTabNavigator} />
+			</MainDrawer.Navigator>
 		</NavigationContainer>
 	);
 }
