@@ -14,7 +14,7 @@ export const Current = () => {
 		return <Text>loading or problem with data</Text>;
 	}
 
-	const typedData = data.data as CurrentResponse;
+	const typedData: CurrentResponse = data.data;
 
 	const output: CurrentData = {
 		city: typedData["location"]["name"],

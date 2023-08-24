@@ -1,10 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { Text, View, StyleSheet, Button } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
+import { StackNavigationProp } from '@react-navigation/stack';
+import { ScanStackParams } from './types/ScanStackParams';
+import { useNavigation } from '@react-navigation/native';
 
 export const HomeScreen = () => {
-  const [hasPermission, setHasPermission] = useState(null);
+  const [hasPermission, setHasPermission] = useState<boolean | null>(null);
   const [scanned, setScanned] = useState(false);
+
+  type ScanNavigationProp = StackNavigationProp<ScanStackParams, "Home">;
+	const navigation = useNavigation<ScanNavigationProp>();
 
   useEffect(() => {
     const getBarCodeScannerPermissions = async () => {
@@ -15,9 +21,14 @@ export const HomeScreen = () => {
     getBarCodeScannerPermissions();
   }, []);
 
-  const handleBarCodeScanned = ({ type, data }) => {
+  type Params = {
+    type: string,
+    data: string
+  }
+
+  const handleBarCodeScanned = ({ type, data }: Params) => {
     setScanned(true);
-    alert(`${data}`);
+    navigation.navigate("ProductDetails", {url: data})
   };
 
   if (hasPermission === null) {
@@ -34,12 +45,9 @@ export const HomeScreen = () => {
         style={StyleSheet.absoluteFillObject}
         barCodeTypes={[BarCodeScanner.Constants.BarCodeType.qr]}
       />
-      {scanned && <Button title={'Tap to Scan Again'} onPress={() => setScanned(false)} />}
     </View>
   );
 }
-
-// const styles = StyleSheet.create({ ... }); 
 
 const styles = StyleSheet.create({
   container: {
