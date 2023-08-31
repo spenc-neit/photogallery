@@ -49,6 +49,8 @@ export const ShakeToCharge = () => {
 
 	useEffect(() => {
 		_subscribeBattery();
+		_subscribeAccelerometer();
+		return () => _unsubscribeAccelerometer();
 	}, []);
 
 	useEffect(() => {
@@ -75,11 +77,6 @@ export const ShakeToCharge = () => {
 		accelSubscription && accelSubscription.remove();
 		setAccelSubscription(null);
 	};
-
-	useEffect(() => {
-		_subscribeAccelerometer();
-		return () => _unsubscribeAccelerometer();
-	}, []);
 
 	if (batteryLevel === null) {
 		return (
@@ -118,7 +115,7 @@ export const ShakeToCharge = () => {
 					</View>
 				</View>
 			</View>
-			<Text>Battery level: {(batteryLevel * 100).toFixed(2)}%</Text>
+			<Text style={styles.text}>Battery level: {(batteryLevel * 100).toFixed(2)}%</Text>
 		</SafeAreaView>
 	);
 };
