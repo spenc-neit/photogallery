@@ -1,7 +1,9 @@
 import { StackParamList } from "./GalleryStackParamList";
 import { RouteProp, useNavigation, useRoute } from "@react-navigation/native";
 import { StackNavigationProp } from "@react-navigation/stack";
-import { useEffect } from "react";
+import { useEffect, useLayoutEffect } from "react";
+import { NativeStackNavigationProp } from "@react-navigation/native-stack/lib/typescript/src/types";
+
 import {
 	SafeAreaView,
 	TouchableOpacity,
@@ -9,8 +11,9 @@ import {
 	StyleSheet,
 	Text,
 } from "react-native";
+import Animated from "react-native-reanimated";
 
-type PhotoDetailNavigationProp = StackNavigationProp<
+type PhotoDetailNavigationProp = NativeStackNavigationProp<
 	StackParamList,
 	"PhotoDetail"
 >;
@@ -22,7 +25,7 @@ export function PhotoDetail() {
 
 	const id = params.url.split("/")[4];
 
-	useEffect(() => {
+	useLayoutEffect(() => {
 		navigation.setOptions({ headerTitle: params.url });
 	}, []);
 
@@ -33,7 +36,8 @@ export function PhotoDetail() {
 					navigation.navigate("FeaturedPhotoModal", { url: params.url });
 				}}
 			>
-				<Image
+				<Animated.Image
+					sharedTransitionTag={`tag-${params.url}`}
 					source={{ uri: params.url }}
 					alt={params.url}
 					style={styles.image}

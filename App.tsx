@@ -7,11 +7,14 @@ import { PhotoDetail } from "./gallery/PhotoDetail";
 import { FeaturedPhotoModal } from "./gallery/FeaturedPhotoModal";
 import { MidtermTabNavigator } from "./midterm/MidtermTabNavigator";
 import { WeatherDrawerNavigator } from "./weather/WeatherDrawerNavigator";
+import { ShakeToCharge } from "./battery/ShakeToCharge";
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+
 
 
 const MainDrawer = createDrawerNavigator();
 
-const GalleryStack = createStackNavigator<StackParamList>();
+const GalleryStack = createNativeStackNavigator<StackParamList>();
 const GalleryStackNavigator = () => {
 	return (
 		<GalleryStack.Navigator>
@@ -39,7 +42,7 @@ const GalleryStackNavigator = () => {
 					headerTintColor: "white",
 					headerTitle: "",
 					headerStyle: { backgroundColor: "black" },
-					cardStyle: { backgroundColor: "black" },
+					// cardStyle: { backgroundColor: "black" },
 					headerShown:false,
 					headerShadowVisible:false
 				}}
@@ -55,6 +58,7 @@ export default function App() {
 				<MainDrawer.Screen name="PhotoGallery" component={GalleryStackNavigator} />
 				<MainDrawer.Screen name="Weather" component={WeatherDrawerNavigator} />
 				<MainDrawer.Screen name="Midterm" component={MidtermTabNavigator} />
+				<MainDrawer.Screen name="Shake to Charge" component={ShakeToCharge} />
 			</MainDrawer.Navigator>
 		</NavigationContainer>
 	);
